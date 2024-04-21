@@ -1,0 +1,22 @@
+#version: 1
+
+remotes:
+  - name: host1
+    user: user1
+    pass: pass1
+    ip:   192.168.100.1
+    port: 22
+
+  - name: host2
+    user: user2
+    pass: pass2
+    ip:   192.168.100.2
+    port: 22
+
+exec:
+  - copy:
+      - files:
+          - from: w:/test/file1.txt
+            to:   /home/file1.txt
+          - from: w:/test/file2.txt
+            to:   /home/file2.txt
