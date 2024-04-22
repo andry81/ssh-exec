@@ -876,6 +876,7 @@ int main(int argc, const char* argv[])
 #if defined(_WIN32) || defined(_WIN64)
     bool is_wsa_inited = false;
 #endif
+    bool is_libssh2_inited = false;
 
     return ret = LAMBDA_TRY_BEGIN(int)
     {
@@ -956,9 +957,12 @@ int main(int argc, const char* argv[])
 
                         LAMBDA_TRY_BEGIN(int)
                         {
-                            if (libssh2_init(0)) {
-                                fprintf(stderr, "error: libssh2 initialization failed\n");
-                                LAMBDA_TRY_RETURN(4);
+                            if (!is_libssh2_inited) {
+                                if (libssh2_init(0)) {
+                                    fprintf(stderr, "error: libssh2 initialization failed\n");
+                                    LAMBDA_TRY_RETURN(4);
+                                }
+                                is_libssh2_inited = true;
                             }
 
                             auto& remotes = remotes_stack.top();
@@ -1145,6 +1149,7 @@ int main(int argc, const char* argv[])
                         LAMBDA_TRY_FINALLY()
                         {
                             libssh2_exit();
+                            is_libssh2_inited = false;
                         }
                         LAMBDA_TRY_END()
                     }
@@ -1163,6 +1168,7 @@ int main(int argc, const char* argv[])
 #if defined(_WIN32) || defined(_WIN64)
         if (is_wsa_inited) {
             WSACleanup();
+            is_wsa_inited = false;
         }
 #endif
     }

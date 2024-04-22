@@ -1,2 +1,5 @@
+2024.04.22:
+* fixed: minor fixup
+
 2024.04.21:
 * new: initial files
